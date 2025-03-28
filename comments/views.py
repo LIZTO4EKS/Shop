@@ -3,7 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import Group
 from .forms import CommentForm
-from .models import Comment
+from .models import Comment, Product
 
 def home(request):
     is_admin = request.user.is_authenticated and request.user.groups.filter(name='администраторы').exists()
@@ -24,7 +24,11 @@ def home(request):
         'comments': comments,
         'extra_content': extra_content
     })
-
+    
+def shop_view(request):
+    products = Product.objects.all()
+    return render(request, 'comments/shop.html', {'products': products})
+  
 def register(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)

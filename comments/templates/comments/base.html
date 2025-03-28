@@ -54,6 +54,7 @@
     <nav>
         <a href="{% url 'home' %}">Главная</a>
         {% if user.is_authenticated %}
+            <a href="{% url 'shop' %}">Услуги</a>
             <a href="{% url 'logout' %}">Выйти</a>
         {% else %}
             <a href="{% url 'login' %}">Войти</a>
