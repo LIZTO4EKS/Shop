@@ -1,31 +1,128 @@
 {% extends 'comments/base.html' %}
 
 {% block content %}
-    <h1>Главная страница</h1>
-    
+
     {% if user.is_authenticated %}
-        <p>Добро пожаловать, {{ user.username }}!</p>
-        <a href="{% url 'logout' %}">Выйти</a>
+        <div class="welcome-banner">
+            <p>Добро пожаловать, {{ user.username }}!</p>
+        </div>
         
-        <h2>Комментарии</h2>
-        <ul>
+        <h2>Комментарии наших клиентов 👤</h2>
+        <ul class="comment-list">
             {% for comment in comments %}
-                <li>{{ comment.user }}: {{ comment.text }} ({{ comment.created_at }})</li>
+                <li class="comment-item">
+                    <p><strong>{{ comment.user }}</strong>: {{ comment.text }}</p>
+                    <small>Рейтинг: {{ comment.rating }} звезды</small>
+                    <small>Дата: {{ comment.created_at }}</small>
+                </li>
             {% endfor %}
         </ul>
         
-        <h2>Добавить комментарий</h2>
-        <form method="post">
+        <h2>Оставьте свой коментарий ⬇️</h2>
+        <form method="post" class="comment-form">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Отправить</button>
+            <div class="form-field">
+                {{ form.as_p }}
+            </div>
+            
+            <div class="rating">
+                <label for="rating">Оцените:</label>
+                <span class="star" data-value="1">&#9733;</span>
+                <span class="star" data-value="2">&#9733;</span>
+                <span class="star" data-value="3">&#9733;</span>
+                <span class="star" data-value="4">&#9733;</span>
+                <span class="star" data-value="5">&#9733;</span>
+                <input type="hidden" name="rating" id="rating" value="0">
+            </div>
+
+            <button type="submit" class="submit-button">Отправить</button>
         </form>
-        
+
         {% if extra_content %}
-            <h2>Административный раздел</h2>
-            <p>{{ extra_content }}</p>
+            <div class="admin-section">
+                <h2>Административный раздел</h2>
+                <p>{{ extra_content }}</p>
+            </div>
         {% endif %}
     {% else %}
         <p>Вы не авторизованы.</p>
     {% endif %}
+
+    <style>
+        .welcome-banner {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .comment-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .comment-item {
+            background-color: #f1f1f1;
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .submit-button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 10px;
+            right: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .submit-button:hover {
+            background-color: #0056b3;
+        }
+
+        .rating {
+            margin-top: 10px;
+            display: flex;
+        }
+
+        .star {
+            font-size: 2em;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .star.selected {
+            color: #ffcc00;
+        }
+
+        .comment-form {
+            position: relative;
+            margin-top: 20px;
+        }
+    </style>
+
+    <script>
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('rating');
+
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = star.getAttribute('data-value');
+                ratingInput.value = value;
+
+                stars.forEach(s => s.classList.remove('selected'));
+                for (let i = 0; i < value; i++) {
+                    stars[i].classList.add('selected');
+                }
+            });
+        });
+    </script>
+
 {% endblock %}

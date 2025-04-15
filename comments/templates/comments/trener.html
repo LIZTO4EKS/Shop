@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Услуги</title>
+    <title>Тренерство</title>
+    <!-- Подключение Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Orbitron', sans-serif;
@@ -78,7 +78,7 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
-        } 
+        }
         
 
         .card {
@@ -181,7 +181,7 @@
             <a href="{% url 'home' %}">Главная</a>
             {% if user.is_authenticated %}
                 <a href="{% url 'shop' %}">Услуги</a>
-                <a href="{% url 'trener' %}">Тренерство</a>
+                <a href="{% url 'trener' %}">Тренеры</a>
                 <a href="{% url 'cart' %}">Корзина</a>
                 <a href="{% url 'logout' %}">Выйти</a>
             {% else %}
@@ -190,26 +190,41 @@
             {% endif %}
         </nav>
 
-        <h1>Услуги, которые мы предоставляем</h1>
+        <h1>Наши тренеры</h1>
 
         <div class="row">
-            {% for product in products %}
+            {% for trainer in trainers %}
                 <div class="col-md-4 mb-4">
-                    <div class="card h-100 shadow-sm" data-bs-toggle="modal" data-bs-target="#productModal{{ product.id }}">
-                        {% if product.image %}
-                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    <div class="card h-100 shadow-sm" data-bs-toggle="modal" data-bs-target="#trainerModal{{ trainer.id }}">
+                        {% if trainer.photo %}
+                            <img src="{{ trainer.photo.url }}" alt="{{ trainer.name }}">
                         {% else %}
                             <img src="https://via.placeholder.com/300" alt="Нет изображения">
                         {% endif %}
                         <div class="card-body">
-                            <h5 class="card-title">{{ product.name }}</h5>
-                            <p class="card-text">{{ product.description|truncatewords:15 }}</p>
-                            <p class="text-success fw-bold">Цена: {{ product.price }} KZT</p>
-                            <p class="text-muted">Кол-во тренировок в неделю: {{ product.stock }}</p>
-                            <form method="post" action="{% url 'add_to_cart' product.id %}">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-primary w-100">Купить курс</button>
-                            </form>
+                            <h5 class="card-title">{{ trainer.name }}</h5>
+                            <p class="text-success fw-bold">Возраст: {{ trainer.price }} лет</p>
+                            <p class="text-muted">Опыт катания: {{ trainer.stock }} лет</p>
+                            <a href="#" class="btn btn-primary w-100">Записаться на консультацию</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Модальное окно для подробностей тренера -->
+                <div class="modal fade" id="trainerModal{{ trainer.id }}" tabindex="-1" aria-labelledby="trainerModalLabel{{ trainer.id }}" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="trainerModalLabel{{ trainer.id }}">{{ trainer.name }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <img src="{{ trainer.photo.url }}" alt="{{ trainer.name }}">
+                                <p class="modal-description">{{ trainer.description }}</p>
+                                <p class="text-success fw-bold">Возраст: {{ trainer.price }} лет</p>
+                                <p class="text-muted">Опыт катания: {{ trainer.stock }} лет</p>
+                                <a href="#" class="btn btn-primary w-100">Записаться на консультацию</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -217,6 +232,7 @@
         </div>
     </div>
 
+    <!-- Подключение Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
