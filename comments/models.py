@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+
 class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text = models.TextField()
@@ -11,6 +12,7 @@ class Comment(models.Model):
         return f'Comment by {self.user.username} on {self.created_at.strftime("%Y-%m-%d %H:%M:%S")}'
     
 
+
 class Trainer(models.Model):
     image = models.ImageField(upload_to='trainers/', default='default.jpg')  # Фото хранятся в /media/products/
     name = models.CharField(max_length=255, blank=False)
@@ -18,6 +20,7 @@ class Trainer(models.Model):
     description = models.TextField(blank=True, null=True)
     comments = models.ManyToManyField(Comment, blank=True)
     stock = models.IntegerField(null=False, blank=False) 
+
 
 
 class Product(models.Model): 
@@ -34,12 +37,14 @@ class Product(models.Model):
 
 
 
+
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Связываем корзину с пользователем
     created_at = models.DateTimeField(auto_now_add=True)  
 
     def __str__(self):
         return f"Корзина пользователя {self.user.username}"
+
 
 
 
